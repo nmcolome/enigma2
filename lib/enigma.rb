@@ -7,15 +7,8 @@ class Enigma
 
   def encrypt(message, key, date)
     shifts = get_shifts(key, date)
-    msg = message.split('')
-    coded_msg = msg.map do |e|
-      start = @character_set.index(e)
-      code = @character_set.rotate(start + shifts[0])[0]
-      shifts.rotate!
-      code
-    end
     {
-      encryption: coded_msg.join(''),
+      encryption: code_msg(message, shifts).join(''),
       date: date,
       key: key
     }
@@ -35,5 +28,14 @@ class Enigma
     keys = get_keys(key)
     shifts = (0..3).to_a.map { |i| offsets[i].to_i + keys[i].to_i }
     shifts.map { |shift| shift % 27 }
+  end
+
+  def code_msg(text, shifts)
+    text.split('').map do |e|
+      start = @character_set.index(e)
+      code = @character_set.rotate(start + shifts[0])[0]
+      shifts.rotate!
+      code
+    end
   end
 end
