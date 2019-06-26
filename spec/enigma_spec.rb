@@ -33,7 +33,7 @@ RSpec.describe 'Enigma' do
     context 'when only a key is provided' do
       it do
         result = {
-          encryption: 'keder ohulw',
+          encryption: 'mfhatasdwm ',
           key: '02715',
           date: '250619'
         }
@@ -41,7 +41,6 @@ RSpec.describe 'Enigma' do
         expect(@enigma.encrypt('hello world', '02715')).to eq result
       end
     end
-  end
 
   it '#get_keys' do
     expect(@enigma.get_keys('02715')).to eq %w[02 27 71 15]

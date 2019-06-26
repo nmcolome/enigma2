@@ -5,7 +5,7 @@ class Enigma
     @character_set = ('a'..'z').to_a << ' '
   end
 
-  def encrypt(message, key, date)
+  def encrypt(message, key, date = Date.today.strftime("%d%m%y"))
     shifts = get_shifts(key, date)
     {
       encryption: code_msg(message, shifts).join(''),
