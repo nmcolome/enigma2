@@ -26,4 +26,19 @@ RSpec.describe 'Enigma' do
 
     expect(@enigma.encrypt('hello world', '02715', '040895')).to eq result
   end
+
+  it '#get_keys' do
+    expect(@enigma.get_keys('02715')).to eq %w[02 27 71 15]
+  end
+
+  it '#get_offsets' do
+    expect(@enigma.get_offsets('040895')).to eq %w[1 0 2 5]
+  end
+
+  it '#get_shifts' do
+    keys = %w[02 27 71 15]
+    offsets = %w[1 0 2 5]
+
+    expect(@enigma.get_shifts('02715', '040895')).to eq [3, 0, 19, 20]
+  end
 end
