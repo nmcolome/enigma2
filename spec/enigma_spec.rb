@@ -17,14 +17,30 @@ RSpec.describe 'Enigma' do
     expect(@enigma.character_set).to eq result
   end
 
-  it '#encrypt' do
-    result = {
-      encryption: 'keder ohulw',
-      key: '02715',
-      date: '040895'
-    }
+  describe '#encrypt' do
+    context 'when a key and date are provided' do
+      it do
+        result = {
+          encryption: 'keder ohulw',
+          key: '02715',
+          date: '040895'
+        }
 
-    expect(@enigma.encrypt('hello world', '02715', '040895')).to eq result
+        expect(@enigma.encrypt('hello world', '02715', '040895')).to eq result
+      end
+    end
+
+    context 'when only a key is provided' do
+      it do
+        result = {
+          encryption: 'keder ohulw',
+          key: '02715',
+          date: '250619'
+        }
+
+        expect(@enigma.encrypt('hello world', '02715')).to eq result
+      end
+    end
   end
 
   it '#get_keys' do
