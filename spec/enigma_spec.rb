@@ -18,7 +18,7 @@ RSpec.describe 'Enigma' do
   end
 
   describe '#encrypt' do
-    context 'when a key and date are provided' do
+    context 'when a message, key and date are provided' do
       it do
         result = {
           encryption: 'keder ohulw',
@@ -30,12 +30,12 @@ RSpec.describe 'Enigma' do
       end
     end
 
-    context 'when only a key is provided' do
-      xit do
+    context 'when only a message and key are provided' do
+      it do
         result = {
-          encryption: 'mfhatasdwm ',
+          encryption: 'pnhawisdzu ',
           key: '02715',
-          date: '250619'
+          date: '020719'
         }
 
         expect(@enigma.encrypt('hello world', '02715')).to eq result
@@ -64,5 +64,31 @@ RSpec.describe 'Enigma' do
     result = 'keder ohulw'.split('')
 
     expect(@enigma.code_msg(msg, shifts)).to eq result
+  end
+
+  describe '#decrypt' do
+    context 'when a message, key and date are provided' do
+      xit do
+        result = {
+          decryption: 'hello world',
+          key: '02715',
+          date: '040895'
+        }
+
+        expect(@enigma.decrypt('keder ohulw', '02715', '040895')).to eq result
+      end
+    end
+
+    context 'when only a message and key are provided' do
+      xit do
+        result = {
+          decryption: 'hello world',
+          key: '02715',
+          date: '020719'
+        }
+
+        expect(@enigma.decrypt('pnhawisdzu ', '02715')).to eq result
+      end
+    end
   end
 end
