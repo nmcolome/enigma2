@@ -31,7 +31,7 @@ RSpec.describe 'Enigma' do
     end
 
     context 'when only a key is provided' do
-      it do
+      xit do
         result = {
           encryption: 'mfhatasdwm ',
           key: '02715',
