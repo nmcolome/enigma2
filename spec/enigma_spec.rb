@@ -17,6 +17,16 @@ RSpec.describe 'Enigma' do
     expect(@enigma.character_set).to eq result
   end
 
+  it '#key_generator' do
+    expect(@enigma.key_generator).to be_an_instance_of String
+    expect(@enigma.key_generator.length).to eq 5
+  end
+
+  it '#date_generator' do
+    expect(@enigma.date_generator).to be_an_instance_of String
+    expect(@enigma.date_generator.length).to eq 6
+  end
+
   describe '#encrypt' do
     context 'when a message, key and date are provided' do
       it do

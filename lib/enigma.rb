@@ -1,8 +1,6 @@
 class Enigma
-  attr_reader :character_set
-
-  def initialize
-    @character_set = ('a'..'z').to_a << ' '
+  def character_set
+    ('a'..'z').to_a << ' '
   end
 
   def encrypt(message, key = key_generator, date = date_generator)
@@ -51,7 +49,7 @@ class Enigma
 
   def transform_msg(text, shifts, type)
     text.split('').map do |e|
-      start = @character_set.index(e)
+      start = character_set.index(e)
       transform = letter_rotation(start, shifts[0], type)
       shifts.rotate!
       transform
@@ -60,9 +58,9 @@ class Enigma
 
   def letter_rotation(start, shift, type)
     if type == 'code'
-      @character_set.rotate(start + shift)[0]
+      character_set.rotate(start + shift)[0]
     else
-      @character_set.rotate(start - shift)[0]
+      character_set.rotate(start - shift)[0]
     end
   end
 end
