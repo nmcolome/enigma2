@@ -1,4 +1,5 @@
 require './lib/transform'
+
 class Enigma
   include Transform
 
