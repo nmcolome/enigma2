@@ -10,6 +10,16 @@ RSpec.describe 'Enigma' do
     expect(@enigma).to be_an_instance_of Enigma
   end
 
+  it '#key_generator' do
+    expect(@enigma.key_generator).to be_an_instance_of String
+    expect(@enigma.key_generator.length).to eq 5
+  end
+
+  it '#date_generator' do
+    expect(@enigma.date_generator).to be_an_instance_of String
+    expect(@enigma.date_generator.length).to eq 6
+  end
+
   describe '#encrypt' do
     context 'when a message, key and date are provided' do
       it do
@@ -49,26 +59,6 @@ RSpec.describe 'Enigma' do
         expect(@enigma.encrypt('hello world')).to eq result
       end
     end
-  end
-
-  xit '#get_keys' do
-    expect(@enigma.get_keys('02715')).to eq %w[02 27 71 15]
-  end
-
-  xit '#get_offsets' do
-    expect(@enigma.get_offsets('040895')).to eq %w[1 0 2 5]
-  end
-
-  xit '#get_shifts' do
-    expect(@enigma.get_shifts('02715', '040895')).to eq [3, 0, 19, 20]
-  end
-
-  xit '#transform_msg' do
-    msg = 'hello world'
-    shifts = [3, 0, 19, 20]
-    result = 'keder ohulw'.split('')
-
-    expect(@enigma.transform_msg(msg, shifts, 'code')).to eq result
   end
 
   describe '#decrypt' do
