@@ -5,7 +5,7 @@ class Enigma
     @character_set = ('a'..'z').to_a << ' '
   end
 
-  def encrypt(message, key, date = Date.today.strftime("%d%m%y"))
+  def encrypt(message, key, date = Date.today.strftime('%d%m%y'))
     shifts = get_shifts(key, date)
     {
       encryption: code_msg(message, shifts).join(''),
@@ -14,7 +14,7 @@ class Enigma
     }
   end
 
-  def decrypt(ciphertext, key, date = Date.today.strftime("%d%m%y"))
+  def decrypt(ciphertext, key, date = Date.today.strftime('%d%m%y'))
     shifts = get_shifts(key, date)
     {
       decryption: decode_msg(ciphertext, shifts).join(''),
@@ -24,11 +24,11 @@ class Enigma
   end
 
   def get_keys(key)
-    (0..3).to_a.map { |i| key[i..i+1]}
+    (0..3).to_a.map { |i| key[i..i + 1] }
   end
 
   def get_offsets(date)
-    square_date = date.to_i ** 2
+    square_date = date.to_i**2
     square_date.to_s[-4..-1].split('')
   end
 

@@ -52,9 +52,6 @@ RSpec.describe 'Enigma' do
   end
 
   it '#get_shifts' do
-    keys = %w[02 27 71 15]
-    offsets = %w[1 0 2 5]
-
     expect(@enigma.get_shifts('02715', '040895')).to eq [3, 0, 19, 20]
   end
 
