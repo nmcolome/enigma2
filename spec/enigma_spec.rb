@@ -114,4 +114,33 @@ RSpec.describe 'Enigma' do
       end
     end
   end
+
+  describe '#crack' do
+    context 'when a message and date are provided' do
+      it do
+        msg = @enigma.encrypt('hello world end', '08304', '291018')
+        result = {
+          decryption: 'hello world end',
+          key: '08304',
+          date: '040895'
+        }
+
+        expect(@enigma.crack(msg[:encryption], '291018')).to eq result
+      end
+    end
+
+    context 'when only a message is provided' do
+      it do
+        msg = @enigma.encrypt('hello world end', '08304', '020719')
+        result = {
+          decryption: 'hello world end',
+          key: 'something',
+          date: '020719'
+        }
+
+        @enigma.stub(:date_generator) { '020719' }
+        expect(@enigma.crack(msg[:encryption])).to eq result
+      end
+    end
+  end
 end
