@@ -9,8 +9,8 @@ class Enigma
     shifts = get_shifts(key, date)
     {
       encryption: transform_msg(message, shifts, 'code').join(''),
-      date: date,
-      key: key
+      key: key,
+      date: date
     }
   end
 
@@ -18,8 +18,8 @@ class Enigma
     shifts = get_shifts(key, date)
     {
       decryption: transform_msg(ciphertext, shifts, 'decode').join(''),
-      date: date,
-      key: key
+      key: key,
+      date: date
     }
   end
 
