@@ -18,7 +18,7 @@ RSpec.describe 'Enigma' do
   end
 
   describe '#encrypt' do
-    context 'when a key and date are provided' do
+    context 'when a message, key and date are provided' do
       it do
         result = {
           encryption: 'keder ohulw',
@@ -30,15 +30,30 @@ RSpec.describe 'Enigma' do
       end
     end
 
-    context 'when only a key is provided' do
-      xit do
+    context 'when only a message and key are provided' do
+      it do
         result = {
-          encryption: 'mfhatasdwm ',
+          encryption: 'pnhawisdzu ',
           key: '02715',
-          date: '250619'
+          date: '020719'
         }
 
+        @enigma.stub(:date_generator) { '020719' }
         expect(@enigma.encrypt('hello world', '02715')).to eq result
+      end
+    end
+
+    context 'when only a message is provided' do
+      it do
+        result = {
+          encryption: 'zjydfeigiqq',
+          key: '12345',
+          date: '020719'
+        }
+
+        @enigma.stub(:key_generator) { '12345' }
+        @enigma.stub(:date_generator) { '020719' }
+        expect(@enigma.encrypt('hello world')).to eq result
       end
     end
   end
@@ -52,17 +67,41 @@ RSpec.describe 'Enigma' do
   end
 
   it '#get_shifts' do
-    keys = %w[02 27 71 15]
-    offsets = %w[1 0 2 5]
-
     expect(@enigma.get_shifts('02715', '040895')).to eq [3, 0, 19, 20]
   end
 
-  it '#code_msg' do
+  it '#transform_msg' do
     msg = 'hello world'
     shifts = [3, 0, 19, 20]
     result = 'keder ohulw'.split('')
 
-    expect(@enigma.code_msg(msg, shifts)).to eq result
+    expect(@enigma.transform_msg(msg, shifts, 'code')).to eq result
+  end
+
+  describe '#decrypt' do
+    context 'when a message, key and date are provided' do
+      it do
+        result = {
+          decryption: 'hello world',
+          key: '02715',
+          date: '040895'
+        }
+
+        expect(@enigma.decrypt('keder ohulw', '02715', '040895')).to eq result
+      end
+    end
+
+    context 'when only a message and key are provided' do
+      it do
+        result = {
+          decryption: 'hello world',
+          key: '02715',
+          date: '020719'
+        }
+
+        @enigma.stub(:date_generator) { '020719' }
+        expect(@enigma.decrypt('pnhawisdzu ', '02715')).to eq result
+      end
+    end
   end
 end

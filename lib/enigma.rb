@@ -5,21 +5,40 @@ class Enigma
     @character_set = ('a'..'z').to_a << ' '
   end
 
-  def encrypt(message, key, date = Date.today.strftime("%d%m%y"))
+  def encrypt(message, key = key_generator, date = date_generator)
     shifts = get_shifts(key, date)
     {
-      encryption: code_msg(message, shifts).join(''),
-      date: date,
-      key: key
+      encryption: transform_msg(message, shifts, 'code').join(''),
+      key: key,
+      date: date
+    }
+  end
+
+  def decrypt(ciphertext, key, date = date_generator)
+    shifts = get_shifts(key, date)
+    {
+      decryption: transform_msg(ciphertext, shifts, 'decode').join(''),
+      key: key,
+      date: date
     }
   end
 
   def get_keys(key)
-    (0..3).to_a.map { |i| key[i..i+1]}
+    (0..3).to_a.map { |i| key[i..i + 1] }
+  end
+
+  def key_generator
+    key = rand(99999).to_s
+    times = 5 - key.length
+    '0' * times + key
+  end
+
+  def date_generator
+    Date.today.strftime('%d%m%y')
   end
 
   def get_offsets(date)
-    square_date = date.to_i ** 2
+    square_date = date.to_i**2
     square_date.to_s[-4..-1].split('')
   end
 
@@ -30,12 +49,20 @@ class Enigma
     shifts.map { |shift| shift % 27 }
   end
 
-  def code_msg(text, shifts)
+  def transform_msg(text, shifts, type)
     text.split('').map do |e|
       start = @character_set.index(e)
-      code = @character_set.rotate(start + shifts[0])[0]
+      transform = letter_rotation(start, shifts[0], type)
       shifts.rotate!
-      code
+      transform
+    end
+  end
+
+  def letter_rotation(start, shift, type)
+    if type == 'code'
+      @character_set.rotate(start + shift)[0]
+    else
+      @character_set.rotate(start - shift)[0]
     end
   end
 end
