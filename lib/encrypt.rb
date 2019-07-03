@@ -1,14 +1,23 @@
 require './lib/enigma.rb'
 require 'date'
 
-source = File.open(ARGV[0], 'r')
-message = source.read
-source.close
+class Encrypt
+  def initialize(input, output)
+    @input = File.open(input, 'r')
+    @output = File.open(output, 'w')
+  end
 
-encryptor = Enigma.new.encrypt(message)
+  def run
+    coded_msg = Enigma.new.encrypt(@input.read)
+    @output.write(coded_msg[:encryption])
+    puts "Created '#{File.basename(@output)}' with the key #{coded_msg[:key]} and date #{coded_msg[:date]}"
+    close
+  end
 
-coded_msg = File.open(ARGV[1], 'w')
-coded_msg.write(encryptor[:encryption])
-coded_msg.close
+  def close
+    @input.close
+    @output.close
+  end
+end
 
-puts "Created '#{ARGV[1]}' with the key #{encryptor[:key]} and date #{encryptor[:date]}"
+Encrypt.new(ARGV[0], ARGV[1]).run
