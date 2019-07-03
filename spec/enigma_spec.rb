@@ -70,12 +70,12 @@ RSpec.describe 'Enigma' do
     expect(@enigma.get_shifts('02715', '040895')).to eq [3, 0, 19, 20]
   end
 
-  it '#code_msg' do
+  it '#transform_msg' do
     msg = 'hello world'
     shifts = [3, 0, 19, 20]
     result = 'keder ohulw'.split('')
 
-    expect(@enigma.code_msg(msg, shifts)).to eq result
+    expect(@enigma.transform_msg(msg, shifts, 'code')).to eq result
   end
 
   describe '#decrypt' do
