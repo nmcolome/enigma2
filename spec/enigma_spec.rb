@@ -38,7 +38,22 @@ RSpec.describe 'Enigma' do
           date: '020719'
         }
 
+        @enigma.stub(:date_generator) { '020719' }
         expect(@enigma.encrypt('hello world', '02715')).to eq result
+      end
+    end
+
+    context 'when only a message is provided' do
+      it do
+        result = {
+          encryption: 'zjydfeigiqq',
+          key: '12345',
+          date: '020719'
+        }
+
+        @enigma.stub(:key_generator) { '12345' }
+        @enigma.stub(:date_generator) { '020719' }
+        expect(@enigma.encrypt('hello world')).to eq result
       end
     end
   end
@@ -84,6 +99,7 @@ RSpec.describe 'Enigma' do
           date: '020719'
         }
 
+        @enigma.stub(:date_generator) { '020719' }
         expect(@enigma.decrypt('pnhawisdzu ', '02715')).to eq result
       end
     end

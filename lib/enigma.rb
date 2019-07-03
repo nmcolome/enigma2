@@ -5,7 +5,7 @@ class Enigma
     @character_set = ('a'..'z').to_a << ' '
   end
 
-  def encrypt(message, key, date = Date.today.strftime('%d%m%y'))
+  def encrypt(message, key = key_generator, date = date_generator)
     shifts = get_shifts(key, date)
     {
       encryption: code_msg(message, shifts).join(''),
@@ -14,7 +14,7 @@ class Enigma
     }
   end
 
-  def decrypt(ciphertext, key, date = Date.today.strftime('%d%m%y'))
+  def decrypt(ciphertext, key, date = date_generator)
     shifts = get_shifts(key, date)
     {
       decryption: decode_msg(ciphertext, shifts).join(''),
@@ -25,6 +25,16 @@ class Enigma
 
   def get_keys(key)
     (0..3).to_a.map { |i| key[i..i + 1] }
+  end
+
+  def key_generator
+    key = rand(99999).to_s
+    times = 5 - key.length
+    '0' * times + key
+  end
+
+  def date_generator
+    Date.today.strftime('%d%m%y')
   end
 
   def get_offsets(date)
