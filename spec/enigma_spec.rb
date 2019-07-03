@@ -68,7 +68,7 @@ RSpec.describe 'Enigma' do
 
   describe '#decrypt' do
     context 'when a message, key and date are provided' do
-      xit do
+      it do
         result = {
           decryption: 'hello world',
           key: '02715',
@@ -80,7 +80,7 @@ RSpec.describe 'Enigma' do
     end
 
     context 'when only a message and key are provided' do
-      xit do
+      it do
         result = {
           decryption: 'hello world',
           key: '02715',

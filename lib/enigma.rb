@@ -14,6 +14,15 @@ class Enigma
     }
   end
 
+  def decrypt(ciphertext, key, date = Date.today.strftime("%d%m%y"))
+    shifts = get_shifts(key, date)
+    {
+      decryption: decode_msg(ciphertext, shifts).join(''),
+      date: date,
+      key: key
+    }
+  end
+
   def get_keys(key)
     (0..3).to_a.map { |i| key[i..i+1]}
   end
@@ -34,6 +43,15 @@ class Enigma
     text.split('').map do |e|
       start = @character_set.index(e)
       code = @character_set.rotate(start + shifts[0])[0]
+      shifts.rotate!
+      code
+    end
+  end
+
+  def decode_msg(text, shifts)
+    text.split('').map do |e|
+      start = @character_set.index(e)
+      code = @character_set.rotate(start - shifts[0])[0]
       shifts.rotate!
       code
     end
