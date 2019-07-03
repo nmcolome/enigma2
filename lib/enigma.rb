@@ -1,6 +1,6 @@
 class Enigma
   def character_set
-    character_set = ('a'..'z').to_a << ' '
+    ('a'..'z').to_a << ' '
   end
 
   def encrypt(message, key = key_generator, date = date_generator)

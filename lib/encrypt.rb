@@ -10,13 +10,17 @@ class Encrypt
   def run
     coded_msg = Enigma.new.encrypt(@input.read)
     @output.write(coded_msg[:encryption])
-    puts "Created '#{File.basename(@output)}' with the key #{coded_msg[:key]} and date #{coded_msg[:date]}"
+    puts user_feedback(File.basename(@output), coded_msg)
     close
   end
 
   def close
     @input.close
     @output.close
+  end
+
+  def user_feedback(name, result)
+    "Created '#{name}' with the key #{result[:key]} and date #{result[:date]}"
   end
 end
 
