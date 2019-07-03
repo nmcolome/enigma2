@@ -1,14 +1,13 @@
-require './lib/transform.rb'
+require './lib/enigma.rb'
 
-class Encrypt
-  include Transform
+source = File.open(ARGV[0], 'r')
+message = source.read
+source.close
 
-  def code(message, key, date)
-    shifts = get_shifts(key, date)
-    {
-      encryption: transform_msg(message, shifts, 'code').join(''),
-      key: key,
-      date: date
-    }
-  end
-end
+encryptor = Enigma.new.encrypt(message)
+
+coded_msg = File.open(ARGV[1], 'w')
+coded_msg.write(encryptor[:encryption])
+coded_msg.close
+
+puts "Created '#{ARGV[1]}' with the key #{encryptor[:key]} and date #{encryptor[:date]}"
