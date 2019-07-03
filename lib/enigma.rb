@@ -1,7 +1,6 @@
+require './lib/transform'
 class Enigma
-  def character_set
-    ('a'..'z').to_a << ' '
-  end
+  include Transform
 
   def encrypt(message, key = key_generator, date = date_generator)
     shifts = get_shifts(key, date)
@@ -21,10 +20,6 @@ class Enigma
     }
   end
 
-  def get_keys(key)
-    (0..3).to_a.map { |i| key[i..i + 1] }
-  end
-
   def key_generator
     key = rand(99999).to_s
     times = 5 - key.length
@@ -33,34 +28,5 @@ class Enigma
 
   def date_generator
     Date.today.strftime('%d%m%y')
-  end
-
-  def get_offsets(date)
-    square_date = date.to_i**2
-    square_date.to_s[-4..-1].split('')
-  end
-
-  def get_shifts(key, date)
-    offsets = get_offsets(date)
-    keys = get_keys(key)
-    shifts = (0..3).to_a.map { |i| offsets[i].to_i + keys[i].to_i }
-    shifts.map { |shift| shift % 27 }
-  end
-
-  def transform_msg(text, shifts, type)
-    text.split('').map do |e|
-      start = character_set.index(e)
-      transform = letter_rotation(start, shifts[0], type)
-      shifts.rotate!
-      transform
-    end
-  end
-
-  def letter_rotation(start, shift, type)
-    if type == 'code'
-      character_set.rotate(start + shift)[0]
-    else
-      character_set.rotate(start - shift)[0]
-    end
   end
 end
