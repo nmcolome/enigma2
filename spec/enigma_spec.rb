@@ -122,7 +122,7 @@ RSpec.describe 'Enigma' do
         result = {
           decryption: 'hello world end',
           key: '08304',
-          date: '040895'
+          date: '291018'
         }
 
         expect(@enigma.crack(msg[:encryption], '291018')).to eq result
@@ -134,7 +134,7 @@ RSpec.describe 'Enigma' do
         msg = @enigma.encrypt('hello world end', '08304', '020719')
         result = {
           decryption: 'hello world end',
-          key: 'something',
+          key: '08304',
           date: '020719'
         }
 

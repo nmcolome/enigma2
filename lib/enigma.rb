@@ -17,6 +17,21 @@ class Enigma
     }
   end
 
+  def crack(ciphertext, date = date_generator)
+    ending = ciphertext[-4..-1]
+    comparator = ' end'
+    shifts = []
+    (0..3).to_a.each do |i|
+      coded = character_set.index(ending[i])
+      regular = character_set.index(comparator[i])
+      shifts << (coded - regular + 27)
+    end
+    rotation_size = ciphertext.length % 4
+    shifts.rotate!(4 - rotation_size)
+    key = deconstruct_shift(shifts, date)
+    decrypt(ciphertext, key, date)
+  end
+
   def key_generator
     key = rand(99999).to_s
     times = 5 - key.length
@@ -62,5 +77,36 @@ class Enigma
     else
       character_set.rotate(start - shift)[0]
     end
+  end
+
+  def deconstruct_shift(shifts, date)
+    offsets = get_offsets(date)
+    keys = (0..3).to_a.map { |i| shifts[i] - offsets[i].to_i }
+    valid = []
+    (0..2).to_a.each do |i|
+      valid.push(keys[i], keys[i+1]) if keys[i] % 10 == keys[i+1] / 10
+    end
+
+    until valid.count == 4
+      last = keys.index(valid[0])
+
+      until keys[last-1] % 10 == keys[last] / 10 || keys[last-1] < 0
+        keys[last-1] -= 27
+      end
+
+      if keys[last-1] < 0
+        until keys[last-1] % 10 == keys[last] / 10
+          keys[last-1] += 27
+        end
+        valid.unshift(keys[last-1])
+      else
+        valid.unshift(keys[last-1])
+      end
+    end
+
+    key = []
+    valid.each { |keys| key << keys / 10 }
+    key << valid[-1] % 10
+    key.join('')
   end
 end
