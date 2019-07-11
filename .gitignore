@@ -1,2 +1,6 @@
 coverage
 # Gemfile.lock
+
+decrypted.txt
+encrypted.txt
+message.txt
