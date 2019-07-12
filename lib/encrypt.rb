@@ -6,7 +6,7 @@ class Encrypt
 
   def run
     coded = Enigma.new.encrypt(@input.read)
-    @output.write(coded_msg[:encryption])
+    @output.write(coded[:encryption])
     puts user_feedback(File.basename(@output), coded[:key], coded[:date])
     close
   end
