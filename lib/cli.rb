@@ -11,7 +11,11 @@ module Cli
     @output.close
   end
 
-  def user_feedback(name, key, date)
-    "Created '#{name}' with the key #{key} and date #{date}"
+  def user_feedback(name, key, date, type='regular')
+    if type == 'regular'
+      "Created '#{name}' with the key #{key} and date #{date}"
+    elsif type == 'crack'
+      "Created '#{name}' with the cracked key #{key} and date #{date}"
+    end
   end
 end
