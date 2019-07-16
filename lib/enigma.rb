@@ -1,3 +1,5 @@
+require 'date'
+
 class Enigma
   def encrypt(message, key = key_generator, date = date_generator)
     shifts = get_shifts(key, date)
@@ -92,8 +94,7 @@ class Enigma
   end
 
   def build_valid(keys)
-    valid = get_first_matching_keys(keys)
-    build_matching_keys(keys, valid)
+    valid = build_matching_keys(keys)
     key = valid.map { |e| e / 10 }
     key << valid[-1] % 10
     key.join('')
@@ -104,25 +105,49 @@ class Enigma
     (0..2).to_a.each do |i|
       valid.push(keys[i], keys[i + 1]) if keys[i] % 10 == keys[i + 1] / 10
     end
-    valid
+    valid.uniq
   end
 
-  def check_smaller_keys(keys, index)
-    until keys[index - 1] % 10 == keys[index] / 10 || keys[index - 1] < 0
-      keys[index - 1] -= 27
+  def check_smaller_keys(keys, index, next_index, direction)
+    if direction == 'right'
+      keys[next_index] -= 27 until keys[index] % 10 == keys[next_index] / 10 || keys[next_index] < 0
+    elsif direction == 'left'
+      keys[next_index] -= 27 until keys[next_index] % 10 == keys[index] / 10 || keys[next_index] < 0
     end
   end
 
-  def check_larger_keys(keys, index)
-    keys[index - 1] += 27 until keys[index - 1] % 10 == keys[index] / 10
+  def check_larger_keys(keys, index, next_index, direction)
+    if direction == 'right'
+      keys[next_index] += 27 until keys[index] % 10 == keys[next_index] / 10 || keys[next_index] > 99
+    elsif direction == 'left'
+      keys[next_index] += 27 until keys[next_index] % 10 == keys[index] / 10 || keys[next_index] > 99
+    end
   end
 
-  def build_matching_keys(keys, valid)
+  def build_matching_keys(keys)
+    valid = []
+    keys.map! { |k| k % 27 }
+    valid = get_first_matching_keys(keys)
+
+    i = 0
+    while valid.empty?
+      if keys[i] > 99
+        keys[i] -= 27
+        i += 1
+      else
+        keys[i] += 27
+      end
+      valid = get_first_matching_keys(keys)
+    end
+
     until valid.count == 4
-      first_valid = keys.index(valid[0])
-      check_smaller_keys(keys, first_valid)
-      check_larger_keys(keys, first_valid) if keys[first_valid - 1] < 0
-      valid.unshift(keys[first_valid - 1])
+      direction = keys.index(valid[0]) == 0 ? 'right' : 'left'
+      valid_key_index = direction == 'right' ? keys.index(valid[-1]) : keys.index(valid[0])
+      next_index = direction == 'right' ? valid_key_index + 1 : valid_key_index - 1
+      check_smaller_keys(keys, valid_key_index, next_index, direction)
+      check_larger_keys(keys, valid_key_index, next_index, direction) if keys[next_index] < 0
+      direction == 'right' ? valid.push(keys[next_index]) : valid.unshift(keys[next_index])
     end
+    valid
   end
 end
