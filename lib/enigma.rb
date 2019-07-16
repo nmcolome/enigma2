@@ -1,4 +1,5 @@
 require 'date'
+require 'pry'
 
 class Enigma
   def encrypt(message, key = key_generator, date = date_generator)
@@ -90,20 +91,21 @@ class Enigma
   def deconstruct_shift(shifts, date)
     offsets = get_offsets(date)
     keys = (0..3).to_a.map { |i| shifts[i] - offsets[i].to_i }
-    build_valid(keys)
+    crack_keys(keys)
   end
 
-  def build_valid(keys)
+  def crack_keys(keys)
     valid = build_matching_keys(keys)
     key = valid.map { |e| e / 10 }
     key << valid[-1] % 10
     key.join('')
   end
 
-  def get_first_matching_keys(keys)
+  def get_valid_keys(keys)
     valid = []
-    (0..2).to_a.each do |i|
-      valid.push(keys[i], keys[i + 1]) if keys[i] % 10 == keys[i + 1] / 10
+    (0..3).to_a.each do |i|
+      valid.push(keys[i], keys[i + 1]) if i < 3 && keys[i] % 10 == keys[i + 1] / 10
+      valid.push(keys[i - 1], keys[i]) if i > 0 && keys[i - 1] % 10 == keys[i] / 10
     end
     valid.uniq
   end
@@ -124,22 +126,7 @@ class Enigma
     end
   end
 
-  def build_matching_keys(keys)
-    valid = []
-    keys.map! { |k| k % 27 }
-    valid = get_first_matching_keys(keys)
-
-    i = 0
-    while valid.empty?
-      if keys[i] > 99
-        keys[i] -= 27
-        i += 1
-      else
-        keys[i] += 27
-      end
-      valid = get_first_matching_keys(keys)
-    end
-
+  def key_builder(valid, keys)
     until valid.count == 4
       direction = keys.index(valid[0]) == 0 ? 'right' : 'left'
       valid_key_index = direction == 'right' ? keys.index(valid[-1]) : keys.index(valid[0])
@@ -148,6 +135,29 @@ class Enigma
       check_larger_keys(keys, valid_key_index, next_index, direction) if keys[next_index] < 0
       direction == 'right' ? valid.push(keys[next_index]) : valid.unshift(keys[next_index])
     end
+  end
+
+  def add_or_substract_27(valid, keys, i)
+    keys.map! { |k| k % 27 }
+    while valid.empty?
+      if keys[i] > 99
+        keys[i] % 27
+        i += 1
+      else
+        keys[i] += 27
+      end
+      valid = get_valid_keys(keys)
+    end
+    valid.any? { |e| e > 99 } ? add_or_substract_27([], keys, i + 1) : valid
+  end
+
+  def build_matching_keys(keys)
+    keys.map! { |k| k % 27 }
+    valid = get_valid_keys(keys)
+    binding.pry
+    valid = add_or_substract_27(valid, keys, 0) if valid.empty?
+    # binding.pry
+    key_builder(valid, keys)
     valid
   end
 end
