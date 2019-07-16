@@ -135,29 +135,42 @@ class Enigma
       check_larger_keys(keys, valid_key_index, next_index, direction) if keys[next_index] < 0
       direction == 'right' ? valid.push(keys[next_index]) : valid.unshift(keys[next_index])
     end
+    valid
   end
 
-  def add_or_substract_27(valid, keys, i)
-    keys.map! { |k| k % 27 }
+  def add_or_substract_27(keys, i)
+    valid = []
+    new_keys = keys.map { |k| k % 27 }
     while valid.empty?
-      if keys[i] > 99
-        keys[i] % 27
+      binding.pry
+      if new_keys[i] > 99
+        new_keys[i] %= 27
         i += 1
       else
-        keys[i] += 27
+        new_keys[i] += 27
       end
-      valid = get_valid_keys(keys)
+      valid = get_valid_keys(new_keys)
     end
-    valid.any? { |e| e > 99 } ? add_or_substract_27([], keys, i + 1) : valid
+    [valid, new_keys]
+  end
+
+  def add_27_to_all(keys, valid_options)
+    (0..3).to_a.each do |i|
+      new_keys = keys.map { |e| e + 27 * i}
+      valid = get_valid_keys(new_keys)
+      valid_options << [valid, new_keys] unless valid.empty?
+    end
   end
 
   def build_matching_keys(keys)
     keys.map! { |k| k % 27 }
-    valid = get_valid_keys(keys)
-    binding.pry
-    valid = add_or_substract_27(valid, keys, 0) if valid.empty?
-    # binding.pry
-    key_builder(valid, keys)
-    valid
+    valid_options = []
+    (0..3).to_a.each { |i| valid_options << add_or_substract_27(keys, i) }
+    add_27_to_all(keys, valid_options)
+    valid = []
+    valid_options.each { |option| valid << key_builder(option[0], option[1]) }
+    valid = valid.uniq
+    valid.select! { |keys| keys.all? { |e| e < 100 } }
+    valid[0]
   end
 end
