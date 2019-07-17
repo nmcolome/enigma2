@@ -138,37 +138,41 @@ class Enigma
     valid
   end
 
-  def add_or_substract_27(keys, i)
-    valid = []
-    new_keys = keys.map { |k| k % 27 }
-    while valid.empty?
-      binding.pry
-      if new_keys[i] > 99
-        new_keys[i] %= 27
-        i += 1
-      else
-        new_keys[i] += 27
-      end
-      valid = get_valid_keys(new_keys)
+  def build_key_options(keys)
+    keys.map do |key|
+      (0..3).to_a.map { |i| key + 27 * i }
     end
-    [valid, new_keys]
   end
 
-  def add_27_to_all(keys, valid_options)
-    (0..3).to_a.each do |i|
-      new_keys = keys.map { |e| e + 27 * i}
-      valid = get_valid_keys(new_keys)
-      valid_options << [valid, new_keys] unless valid.empty?
+  def get_valid_key_options(keys)
+    options = build_key_options(keys)
+    (0..2).to_a.map do |i|
+      result = []
+      key_options = options[i].each do |key|
+        options[i + 1].each do |next_key|
+          result << [key, next_key] if key % 10 == next_key / 10
+        end
+      end
+      [[i, i + 1], result]
     end
+  end
+
+  def option_builder(matching, keys)
+    positions = (0..3).to_a
+    matching.each do |key, value|
+      complement = positions - key
+      value.each do |pair|
+        complement.each { |i| pair.insert(i, keys[i]) }
+      end
+    end
+    matching.values.flatten(1)
   end
 
   def build_matching_keys(keys)
     keys.map! { |k| k % 27 }
-    valid_options = []
-    (0..3).to_a.each { |i| valid_options << add_or_substract_27(keys, i) }
-    add_27_to_all(keys, valid_options)
-    valid = []
-    valid_options.each { |option| valid << key_builder(option[0], option[1]) }
+    matching_keys_w_index = get_valid_key_options(keys).to_h
+    options = option_builder(matching_keys_w_index, keys)
+    valid = options.map { |option| key_builder(option - keys, option) }
     valid = valid.uniq
     valid.select! { |keys| keys.all? { |e| e < 100 } }
     valid[0]
