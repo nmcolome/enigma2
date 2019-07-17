@@ -170,11 +170,11 @@ class Enigma
 
   def build_matching_keys(keys)
     keys.map! { |k| k % 27 }
-    matching_keys_w_index = get_valid_key_options(keys).to_h
-    options = option_builder(matching_keys_w_index, keys)
-    valid = options.map { |option| key_builder(option - keys, option) }
-    valid = valid.uniq
-    valid.select! { |keys| keys.all? { |e| e < 100 } }
-    valid[0]
+    matches = get_valid_key_options(keys).to_h.values.flatten(1)
+    options = option_builder(get_valid_key_options(keys).to_h, keys)
+    valid = (0..matches.count - 1).to_a.map do |i|
+      key_builder(matches[i], options[i])
+    end
+    valid.uniq.select { |keys| keys.all? { |e| e < 100 } }.sample
   end
 end
