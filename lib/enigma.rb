@@ -110,14 +110,6 @@ class Enigma
     valid.uniq
   end
 
-  def check_smaller_keys(keys, index, next_index, direction)
-    if direction == 'right'
-      keys[next_index] -= 27 until keys[index] % 10 == keys[next_index] / 10 || keys[next_index] < 0
-    elsif direction == 'left'
-      keys[next_index] -= 27 until keys[next_index] % 10 == keys[index] / 10 || keys[next_index] < 0
-    end
-  end
-
   def check_larger_keys(keys, index, next_index, direction)
     if direction == 'right'
       keys[next_index] += 27 until keys[index] % 10 == keys[next_index] / 10 || keys[next_index] > 99
@@ -126,13 +118,12 @@ class Enigma
     end
   end
 
-  def key_builder(valid, keys)
+  def key_builder(valid, keys, indexes)
     until valid.count == 4
-      direction = keys.index(valid[0]) == 0 ? 'right' : 'left'
+      direction = indexes.include?(0) ? 'right' : 'left'
       valid_key_index = direction == 'right' ? keys.index(valid[-1]) : keys.index(valid[0])
       next_index = direction == 'right' ? valid_key_index + 1 : valid_key_index - 1
-      check_smaller_keys(keys, valid_key_index, next_index, direction)
-      check_larger_keys(keys, valid_key_index, next_index, direction) if keys[next_index] < 0
+      check_larger_keys(keys, valid_key_index, next_index, direction)
       direction == 'right' ? valid.push(keys[next_index]) : valid.unshift(keys[next_index])
     end
     valid
@@ -172,8 +163,12 @@ class Enigma
     keys.map! { |k| k % 27 }
     matches = get_valid_key_options(keys).to_h.values.flatten(1)
     options = option_builder(get_valid_key_options(keys).to_h, keys)
+    options_index = []
+    get_valid_key_options(keys).to_h.each do |k,v|
+      v.count.times { options_index << k }
+    end
     valid = (0..matches.count - 1).to_a.map do |i|
-      key_builder(matches[i], options[i])
+      key_builder(matches[i], options[i], options_index[i])
     end
     valid.uniq.select { |keys| keys.all? { |e| e < 100 } }.sample
   end
