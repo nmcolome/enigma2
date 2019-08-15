@@ -1,10 +1,8 @@
 class CipherCracker
-  def initialize
-    
-  end
+  attr_reader :character_set
 
-  def character_set
-    ('a'..'z').to_a << ' '
+  def initialize
+    @character_set = ('a'..'z').to_a << ' '
   end
 
   def get_offsets(date)
