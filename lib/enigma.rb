@@ -14,7 +14,7 @@ class Enigma
   end
 
   def key_generator
-    key = rand(99999).to_s
+    key = rand(99_999).to_s
     times = 5 - key.length
     '0' * times + key
   end
