@@ -25,8 +25,7 @@ class Enigma
 
   def crack(ciphertext, date = date_generator)
     cipher_cracker = CipherCracker.new
-    shifts = cipher_cracker.crack_shifts(ciphertext)
-    key = cipher_cracker.crack_keys(shifts, date)
+    key = cipher_cracker.crack_keys(ciphertext, date)
     decrypt(ciphertext, key, date)
   end
 end

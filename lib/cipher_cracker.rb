@@ -23,7 +23,8 @@ class CipherCracker
     square_date.to_s[-4..-1].split('')
   end
 
-  def crack_keys(shifts, date)
+  def crack_keys(ciphertext, date)
+    shifts = crack_shifts(ciphertext)
     offsets = get_offsets(date)
     initial_keys = (0..3).to_a.map { |i| shifts[i] - offsets[i].to_i }
     initial_keys.map! { |k| k % 27 }
