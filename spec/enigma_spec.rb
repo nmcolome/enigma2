@@ -71,6 +71,18 @@ RSpec.describe 'Enigma' do
         expect(@enigma.encrypt('HELLO WORLd', '02715', '040895')).to eq result
       end
     end
+
+    context 'when a message has symbols or escape characters' do
+      it do
+        result = {
+          encryption: "\tkeder ohulw!!\n rowvaesprrdx!!.",
+          key: '02715',
+          date: '040895'
+        }
+
+        expect(@enigma.encrypt("\thello world!!\ngoodbye world!!.", '02715', '040895')).to eq result
+      end
+    end
   end
 
   describe '#decrypt' do
@@ -98,6 +110,18 @@ RSpec.describe 'Enigma' do
         expect(@enigma.decrypt('pnhawisdzu ', '02715')).to eq result
       end
     end
+
+    context 'when a message has symbols or escape characters' do
+      it do
+        result = {
+          decryption: "\thello world!!\ngoodbye world!!.",
+          key: '02715',
+          date: '040895'
+        }
+
+        expect(@enigma.decrypt("\tkeder ohulw!!\n rowvaesprrdx!!.", '02715', '040895')).to eq result
+      end
+    end
   end
 
   describe '#crack' do
@@ -119,6 +143,20 @@ RSpec.describe 'Enigma' do
         msg = @enigma.encrypt('hello world end', '08304', '020719')
         result = {
           decryption: 'hello world end',
+          key: '08304',
+          date: '020719'
+        }
+
+        @enigma.stub(:date_generator) { '020719' }
+        expect(@enigma.crack(msg[:encryption])).to eq result
+      end
+    end
+
+    context 'when a message has symbols or escape characters' do
+      it do
+        msg = @enigma.encrypt("\thello world!!\ngoodbye world!! end.", '08304', '020719')
+        result = {
+          decryption: "\thello world!!\ngoodbye world!! end.",
           key: '08304',
           date: '020719'
         }
