@@ -1,6 +1,5 @@
 require './spec/spec_helper'
 require './lib/enigma'
-require 'pry'
 
 RSpec.describe 'Enigma' do
   before(:all) do
