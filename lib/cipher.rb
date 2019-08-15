@@ -40,7 +40,7 @@ class Cipher
   end
 
   def transform_msg(text, shifts, type)
-    text.split('').map do |e|
+    text.downcase.split('').map do |e|
       start = character_set.index(e)
       transform = letter_rotation(start, shifts[0], type)
       shifts.rotate!

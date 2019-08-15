@@ -59,6 +59,18 @@ RSpec.describe 'Enigma' do
         expect(@enigma.encrypt('hello world')).to eq result
       end
     end
+
+    context 'when a message has capital letters' do
+      it do
+        result = {
+          encryption: 'keder ohulw',
+          key: '02715',
+          date: '040895'
+        }
+
+        expect(@enigma.encrypt('HELLO WORLd', '02715', '040895')).to eq result
+      end
+    end
   end
 
   describe '#decrypt' do
