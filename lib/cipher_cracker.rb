@@ -6,7 +6,8 @@ class CipherCracker
   def crack_shifts(ciphertext)
     ending = ciphertext[-4..-1]
     shifts = crack_rotations(ending)
-    abcd_remainder = ciphertext.length % 4
+    text = ciphertext.scan(/[a-z ]/).join
+    abcd_remainder = text.length % 4
     shifts.rotate!(4 - abcd_remainder)
   end
 

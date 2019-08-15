@@ -72,15 +72,15 @@ RSpec.describe 'Enigma' do
       end
     end
 
-    context 'when a message has symbols or escape characters' do
+    context 'when a message has symbols, digits or escape characters' do
       it do
         result = {
-          encryption: "\tkeder ohulw!!\n rowvaesprrdx!!.",
+          encryption: "\tkeder ohulw5!!\n rowvaesprrdx!!.",
           key: '02715',
           date: '040895'
         }
 
-        expect(@enigma.encrypt("\thello world!!\ngoodbye world!!.", '02715', '040895')).to eq result
+        expect(@enigma.encrypt("\thello world5!!\ngoodbye world!!.", '02715', '040895')).to eq result
       end
     end
   end
@@ -111,15 +111,15 @@ RSpec.describe 'Enigma' do
       end
     end
 
-    context 'when a message has symbols or escape characters' do
+    context 'when a message has symbols, digits, or escape characters' do
       it do
         result = {
-          decryption: "\thello world!!\ngoodbye world!!.",
+          decryption: "\thello world5!!\ngoodbye world!!.",
           key: '02715',
           date: '040895'
         }
 
-        expect(@enigma.decrypt("\tkeder ohulw!!\n rowvaesprrdx!!.", '02715', '040895')).to eq result
+        expect(@enigma.decrypt("\tkeder ohulw5!!\n rowvaesprrdx!!.", '02715', '040895')).to eq result
       end
     end
   end
@@ -152,17 +152,16 @@ RSpec.describe 'Enigma' do
       end
     end
 
-    context 'when a message has symbols or escape characters' do
+    context 'when a message has symbols, digits or escape characters' do
       it do
-        msg = @enigma.encrypt("\thello world!!\ngoodbye world!! end.", '08304', '020719')
+        msg = @enigma.encrypt("\thello world3!!\ngoodbye world!!. end", '08304', '020719')
         result = {
-          decryption: "\thello world!!\ngoodbye world!! end.",
+          decryption: "\thello world3!!\ngoodbye world!!. end",
           key: '08304',
           date: '020719'
         }
 
-        @enigma.stub(:date_generator) { '020719' }
-        expect(@enigma.crack(msg[:encryption])).to eq result
+        expect(@enigma.crack(msg[:encryption], '020719')).to eq result
       end
     end
   end
