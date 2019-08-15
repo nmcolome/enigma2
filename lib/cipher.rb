@@ -42,6 +42,14 @@ class Cipher
   def transform_msg(text, shifts, type)
     text.downcase.split('').map do |e|
       start = character_set.index(e)
+      character_lookup(e, start, shifts, type)
+    end
+  end
+
+  def character_lookup(element, start, shifts, type)
+    if start.nil?
+      element
+    else
       transform = letter_rotation(start, shifts[0], type)
       shifts.rotate!
       transform
