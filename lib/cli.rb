@@ -11,7 +11,7 @@ module Cli
     @output.close
   end
 
-  def user_feedback(name, key, date, type='regular')
+  def feedback(name, key, date, type = 'regular')
     if type == 'regular'
       "Created '#{name}' with the key #{key} and date #{date}"
     elsif type == 'crack'
