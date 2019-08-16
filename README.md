@@ -71,7 +71,7 @@ The `Enigma` class provides the following:
 
 | Argument | Description | Requirement |
 | ----- | ----- |-----|
-| Ciphertext | The string to be decoded (symbols, numbers and escape characters will not be transformed) | Required |
+| Ciphertext | The string to be decoded (symbols, numbers and escape characters will not be transformed) (assumption that all messages end with ' end')| Required |
 | Date | DDMMYY format | Optional |
 
 ### Example
