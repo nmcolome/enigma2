@@ -30,23 +30,6 @@ $ cd enigma2
 $ bundle install
 ```
 
-## How to use the command line interface
-
-### Encrypting & Decrypting
-```
-$ ruby ./lib/encrypt.rb message.txt encrypted.txt
-Created 'encrypted.txt' with the key 95009 and date 150819
-$ ruby ./lib/decrypt.rb encrypted.txt decrypted.txt 95009 150819
-Created 'decrypted.txt' with the key 95009 and date 150819
-```
-### Cracking
-```
-$ ruby ./lib/encrypt.rb message.txt encrypted.txt
-Created 'encrypted.txt' with the key 95009 and date 150819
-$ ruby ./lib/crack.rb encrypted.txt cracked.txt 150819
-Created 'cracked.txt' with the cracked key 95009 and date 150819
-```
-
 ## How to use it
 
 The `Enigma` class provides the following:
@@ -74,7 +57,7 @@ The `Enigma` class provides the following:
 | Ciphertext | The string to be decoded (symbols, numbers and escape characters will not be transformed) (assumption that all messages end with ' end')| Required |
 | Date | DDMMYY format | Optional |
 
-### Example
+## Example
 ```ruby
 $ require './lib/enigma'
 #=> true
@@ -136,6 +119,35 @@ $ enigma.crack("vhrvbcbyeojjsqj")
 #     date: # todays date in the format DDMMYY,
 #     key: # key used for encryption
 #   }
+```
+
+## How to use the command line interface
+
+### Encrypting & Decrypting
+`encrypt.rb` takes 2 command line arguments. `message.txt` is an existing file with the message to be encrypted. `encrypted.txt` is where the program should write the encoded message.
+
+In addition to writing the encrypted message to the file, the program outputs to the screen the file it wrote to, the key and the date.
+
+`decrypt.rb` takes 4 command line arguments. `encrypted.txt` is an existing file with the message to be decoded. `decrypted.txt` is where the program should write the decoded message. Then the 5-digit key and the date to be used for decryption.
+
+In addition to writing the decrypted message to the file, the program outputs to the screen the file it wrote to, the key and the date.
+
+### Example
+```
+$ ruby ./lib/encrypt.rb message.txt encrypted.txt
+Created 'encrypted.txt' with the key 95009 and date 150819
+$ ruby ./lib/decrypt.rb encrypted.txt decrypted.txt 95009 150819
+Created 'decrypted.txt' with the key 95009 and date 150819
+```
+### Cracking
+`crack.rb` takes 3 command line arguments. `encrypted.txt` is an existing file with the message to be decoded. `cracked.txt` is where the program should write the cracked message. And the date to be used for decryption.
+
+In addition to writing the decrypted message to the file, the program outputs to the screen the file it wrote to, the key and the date.
+```
+$ ruby ./lib/encrypt.rb message.txt encrypted.txt
+Created 'encrypted.txt' with the key 95009 and date 150819
+$ ruby ./lib/crack.rb encrypted.txt cracked.txt 150819
+Created 'cracked.txt' with the cracked key 95009 and date 150819
 ```
 
 ## Built With
